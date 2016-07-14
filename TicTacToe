@@ -1,0 +1,128 @@
+size = 3
+filler = 1
+xval = 2
+oval = 0
+import numpy as np
+import random
+
+
+class TicTacToe:
+	def __init__(self, integer):
+		self.table = np.zeros(shape=(integer,integer))
+
+	def Oplay(self):
+		print "Player's Turn"
+		validmove = False
+		while not validmove:
+			x = int(raw_input('Pick an x-coordinate:   '))
+			y = int(raw_input('Pick a y-coordinate:   '))
+			if self.table[y,x] == 1 and x < size and y< size and x>= 0 and y>=0:
+				self.table[y,x] = 0
+				validmove = True
+			else: 
+				print "That is not a valid move, try again."
+			
+	
+	def xhorizwin(self):
+			for y in self.table:
+				if np.all(y == xval):
+					return True
+			return False
+	def xvertwin(self):
+			for n in range(size):
+				column = self.table[:,n]
+				winspercol = 0
+				for num in column:
+					if num == xval and num != filler:
+						winspercol +=1
+				if winspercol == len(column):
+					return True
+			return False
+	def xdiagwin(self):
+			if np.all(self.table.diagonal() == xval):
+					return True
+			if np.all(np.diagonal(np.fliplr(self.table)) == xval):
+					return True
+				
+			return False
+	def ohorizwin(self):
+			for y in self.table:
+				if np.all(y == oval):
+					return True
+			return False
+	def overtwin(self):
+		for n in range(size):
+			column = self.table[:,n]				
+			winspercol = 0
+			for num in column:
+				if num == oval and num != filler:
+					winspercol +=1
+				if winspercol == len(column):
+					return True
+		return False
+	def odiagwin(self):
+			if np.all(self.table.diagonal() == oval):
+					return True
+			if np.all(np.diagonal(np.fliplr(self.table)) == oval):
+					return True
+				
+			return False
+
+	def xwin(self):
+		if self.xdiagwin() or self.xvertwin() or self.xhorizwin():
+			return True
+		else:
+			return False
+
+	def owin(self):
+		if self.odiagwin() or self.overtwin() or self.ohorizwin():
+			return True
+		else:
+			return False
+
+	def draw(self):
+		if not (self.xwin() or self.owin()):
+			for row in self.table:
+				for thing in row:
+					if thing == filler:
+						return False
+			return True
+		else:
+			return False
+	def Xplay(self):
+		print 'Computer move'
+		playmade = False
+		while not playmade:
+			x = random.randrange(size)
+			y = random.randrange(size)
+			if self.table[y,x] == 1:
+				self.table[y,x] = 2
+				playmade = True
+			if self.draw():
+				break
+
+
+
+
+thistic = TicTacToe(size)
+thistic.table[thistic.table == 0]= filler
+
+while True:
+	print thistic.table
+	if thistic.xwin() or thistic.draw():
+		break
+	thistic.Oplay()
+	print thistic.table
+	if thistic.owin() or thistic.draw():
+		break
+	thistic.Xplay()
+
+if thistic.owin():
+	print "The player wins! Good job!"
+elif thistic.xwin():
+	print "I won! Better luck next time!"
+else:
+	print "This game is a draw!"
+
+
+
